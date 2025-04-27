@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import CodeBlock from '../../components/CodeBlock.astro';
-import ImageGallery from '../../components/ImageGallery.astro';
+
 import { format } from 'date-fns';
 
 // In a real implementation, we would fetch these from a CMS or content collection
@@ -39,7 +38,7 @@ Let's create a simple Tab component:
 \`\`\`jsx
 // Tab.jsx
 import React, { createContext, useState, useContext } from 'react';
-
+import { useState } from 'react';
 const TabContext = createContext();
 
 export function Tabs({ children, defaultTab }) {
@@ -172,39 +171,18 @@ React Server Components are a game-changer for data fetching and rendering. They
 
 \`\`\`jsx
 // This is a Server Component
-async function ProductDetails({ id }) {
-  const product = await fetchProduct(id);
+async function BlogPost({ slug }) {
+  const post = await fetchBlogPost(slug);
   
   return (
-    <div>
-      <h1>{product.name}</h1>
-      <p>{product.description}</p>
-      <p>${product.price}</p>
-      
-      {/* Client Component with interactivity */}
-      <AddToCartButton product={product} />
-    </div>
-  );
-}
-
-// This is marked as a Client Component
-'use client'
-function AddToCartButton({ product }) {
-  const [isAdded, setIsAdded] = useState(false);
-  
-  const handleClick = () => {
-    addToCart(product);
-    setIsAdded(true);
-    setTimeout(() => setIsAdded(false), 2000);
-  };
-  
-  return (
-    <button 
-      onClick={handleClick} 
-      className={\`add-to-cart \${isAdded ? 'added' : ''}\`}
-    >
-      {isAdded ? 'Added to Cart!' : 'Add to Cart'}
-    </button>
+    <article>
+      <h1>{post.title}</h1>
+      <div className="metadata">
+        <span>Posted on {post.date}</span>
+        <span>By {post.author}</span>
+      </div>
+      <div className="content">{post.content}</div>
+    </article>
   );
 }
 \`\`\`
@@ -554,21 +532,6 @@ if (!post) {
   return Astro.redirect('/404');
 }
 
-const formattedDate = format(new Date(post.pubDate), 'MMMM dd, yyyy');
-
-// Mock data for image gallery
-const sampleImages = [
-  {
-    url: "https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    alt: "Code on a screen",
-    caption: "Modern JavaScript code example"
-  },
-  {
-    url: "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    alt: "Laptop with code",
-    caption: "Working with TypeScript in VS Code"
-  }
-];
 
 // Mock data for related posts
 const relatedPosts = posts.filter(p => p.slug !== slug);
@@ -628,7 +591,6 @@ function markdownToHTML(md) {
 
 let htmlContent = markdownToHTML(processedContent);
 
-// Re-insert code blocks
 codeBlocks.forEach((block, index) => {
   const placeholder = `<!-- CODE_BLOCK_${index} -->`;
   htmlContent = htmlContent.replace(placeholder, `<astro-code-block index="${index}"></astro-code-block>`);
@@ -656,12 +618,12 @@ codeBlocks.forEach((block, index) => {
           <!-- Tags -->
           <div class="flex flex-wrap gap-2 mb-4">
             {post.tags.map(tag => (
-              <a 
-                href={`/tags/${tag}`}
-                class="text-xs font-medium px-2 py-1 rounded-full bg-primary-500/90 text-white hover:bg-primary-600/90 transition-colors"
-              >
-                #{tag}
+              <a
+                href={`/tags/${tag.name}`}
+                class="text-xs font-medium px-2 py-1 rounded-full bg-primary-500/90 text-white hover:bg-primary-600/90 transition-colors">
+                #{tag.name}
               </a>
+
             ))}
           </div>
           
@@ -674,7 +636,7 @@ codeBlocks.forEach((block, index) => {
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <time datetime={post.pubDate.toISOString()}>{formattedDate}</time>
+              <time datetime={post.pubDate.toISOString()}>{format(new Date(post.pubDate), 'MMMM dd, yyyy')}</time>
             </div>
             <div class="flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -697,12 +659,6 @@ codeBlocks.forEach((block, index) => {
     <div class="container mx-auto max-w-4xl px-4 sm:px-6 py-12">
       <div class="prose prose-lg dark:prose-invert max-w-none">
         <Fragment set:html={htmlContent} />
-      </div>
-      
-      <!-- Image gallery example -->
-      <div class="my-8">
-        <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Screenshots</h3>
-        <ImageGallery images={sampleImages} />
       </div>
       
       <!-- Author section -->
