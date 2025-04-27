@@ -1,0 +1,263 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PostCard from '../components/PostCard.astro';
+
+// In a real implementation, we would fetch these from a CMS or content collection
+const featuredPosts = [
+  {
+    title: "Getting Started with Modern React Patterns",
+    slug: "getting-started-with-modern-react-patterns",
+    pubDate: new Date('2025-04-10'),
+    description: "Learn the latest React patterns and best practices for building scalable applications in 2025.",
+    image: "https://images.pexels.com/photos/11035471/pexels-photo-11035471.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["react", "javascript", "frontend"],
+    featured: true
+  },
+  {
+    title: "Building a Full-Stack App with Astro and Supabase",
+    slug: "building-fullstack-app-with-astro-supabase",
+    pubDate: new Date('2025-04-01'),
+    description: "A step-by-step guide to creating a full-stack application using Astro and Supabase.",
+    image: "https://images.pexels.com/photos/4974914/pexels-photo-4974914.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["astro", "supabase", "fullstack"],
+    featured: true
+  },
+  {
+    title: "Advanced TypeScript Techniques for Better Code",
+    slug: "advanced-typescript-techniques",
+    pubDate: new Date('2025-03-28'),
+    description: "Improve your TypeScript skills with these advanced techniques for writing safer, more maintainable code.",
+    image: "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["typescript", "javascript", "dev-tools"],
+    featured: false
+  }
+];
+
+const recentPosts = [
+  ...featuredPosts,
+  {
+    title: "CSS Grid Mastery: Building Complex Layouts",
+    slug: "css-grid-mastery",
+    pubDate: new Date('2025-03-22'),
+    description: "Master CSS Grid to create complex, responsive layouts with less code and better maintainability.",
+    image: "https://images.pexels.com/photos/196645/pexels-photo-196645.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["css", "frontend", "web-design"],
+    featured: false
+  },
+  {
+    title: "Performance Optimization Techniques for Modern Web Apps",
+    slug: "performance-optimization-web-apps",
+    pubDate: new Date('2025-03-15'),
+    description: "Learn how to optimize your web applications for better performance and user experience.",
+    image: "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["performance", "web-dev", "optimization"],
+    featured: false
+  },
+  {
+    title: "Introduction to WebAssembly for JavaScript Developers",
+    slug: "webassembly-for-javascript-devs",
+    pubDate: new Date('2025-03-10'),
+    description: "Dive into WebAssembly and learn how to integrate it with your JavaScript projects for improved performance.",
+    image: "https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["webassembly", "javascript", "performance"],
+    featured: false
+  }
+];
+
+// Popular categories/tags
+const popularTags = [
+  { name: "javascript", count: 24 },
+  { name: "react", count: 18 },
+  { name: "frontend", count: 15 },
+  { name: "web-dev", count: 12 },
+  { name: "typescript", count: 10 },
+  { name: "performance", count: 8 },
+  { name: "css", count: 7 },
+  { name: "node", count: 6 }
+];
+---
+
+<Layout title="Home">
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-b from-primary-50 to-white py-16 md:py-24">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+          Vibe Coding With <span class="text-primary-600">Fred</span>
+        </h1>
+        <p class="text-xl text-gray-600 mb-8">
+          Modern web development insights, practical tutorials, and code examples that actually work.
+        </p>
+        <div class="flex justify-center space-x-4">
+          <a href="/blog" class="px-6 py-3 bg-primary-600 text-white font-medium rounded-lg shadow-sm hover:bg-primary-700 transition-colors">
+            Read Articles
+          </a>
+          <a href="/about" class="px-6 py-3 bg-white text-gray-900 font-medium rounded-lg shadow-sm border border-gray-300 hover:bg-gray-50 transition-colors">
+            About Me
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Featured Posts -->
+  <section class="py-12 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Featured Posts</h2>
+        <a href="/blog" class="text-primary-600 hover:text-primary-700 flex items-center text-sm font-medium">
+          View All
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {featuredPosts.map(post => <PostCard post={post} />)}
+      </div>
+    </div>
+  </section>
+  
+  <!-- Recent Posts & Sidebar -->
+  <section class="py-12 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2">
+          <h2 class="text-2xl font-bold text-gray-900 mb-8">Recent Posts</h2>
+          
+          <div class="space-y-8">
+            {recentPosts.slice(0, 4).map(post => (
+              <article class="bg-white rounded-lg shadow-sm overflow-hidden flex flex-col md:flex-row">
+                <a href={`/blog/${post.slug}`} class="md:w-1/3 flex-shrink-0">
+                  <img 
+                    src={post.image} 
+                    alt={post.title} 
+                    class="w-full h-48 md:h-full object-cover"
+                    loading="lazy"
+                  />
+                </a>
+                <div class="p-6 md:w-2/3">
+                  <div class="flex flex-wrap gap-2 mb-3">
+                    {post.tags.slice(0, 2).map((tag) => (
+                      <a 
+                        href={`/tags/${tag}`} 
+                        class="text-xs font-medium px-2 py-1 rounded-full bg-primary-100 text-primary-800 hover:bg-primary-200"
+                      >
+                        #{tag}
+                      </a>
+                    ))}
+                  </div>
+                  
+                  <h3 class="text-xl font-bold mb-2 text-gray-900 hover:text-primary-600">
+                    <a href={`/blog/${post.slug}`}>
+                      {post.title}
+                    </a>
+                  </h3>
+                  
+                  <p class="text-gray-600 text-sm mb-4">
+                    {post.description}
+                  </p>
+                  
+                  <div class="flex justify-between items-center">
+                    <time datetime={post.pubDate.toISOString()} class="text-sm text-gray-500">
+                      {new Intl.DateTimeFormat('en-US', { 
+                        month: 'long', 
+                        day: 'numeric', 
+                        year: 'numeric' 
+                      }).format(post.pubDate)}
+                    </time>
+                    
+                    <a 
+                      href={`/blog/${post.slug}`}
+                      class="text-primary-600 text-sm font-medium hover:text-primary-700 inline-flex items-center"
+                    >
+                      Read More
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+          
+          <div class="mt-8 text-center">
+            <a href="/blog" class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+              View All Posts
+            </a>
+          </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+          <!-- About Widget -->
+          <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">About the Author</h3>
+            <div class="flex items-center mb-4">
+              <img 
+                src="https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                alt="Fred" 
+                class="w-16 h-16 rounded-full mr-4 object-cover"
+              />
+              <div>
+                <h4 class="font-medium text-gray-900">Fred</h4>
+                <p class="text-sm text-gray-600">Senior Web Developer</p>
+              </div>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">
+              Hi! I'm Fred, a web developer passionate about modern frontend technologies and clean code. I share tutorials, tips, and insights from my development journey.
+            </p>
+            <a href="/about" class="text-primary-600 hover:text-primary-700 text-sm font-medium">
+              Learn more about me
+            </a>
+          </div>
+          
+          <!-- Popular Tags Widget -->
+          <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Popular Topics</h3>
+            <div class="flex flex-wrap gap-2">
+              {popularTags.map(tag => (
+                <a 
+                  href={`/tags/${tag.name}`} 
+                  class="text-sm px-3 py-1 rounded-full bg-gray-100 text-gray-800 hover:bg-primary-100 hover:text-primary-800"
+                >
+                  #{tag.name} <span class="text-gray-500 text-xs">({tag.count})</span>
+                </a>
+              ))}
+            </div>
+          </div>
+          
+          <!-- Newsletter Widget -->
+          <div class="bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg shadow-sm p-6">
+            <h3 class="text-lg font-bold text-white mb-2">Join the Newsletter</h3>
+            <p class="text-primary-100 text-sm mb-4">
+              Get the latest articles, tutorials, and updates delivered to your inbox.
+            </p>
+            <form class="space-y-3">
+              <div>
+                <label for="email" class="sr-only">Email address</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  placeholder="Your email address" 
+                  class="w-full px-4 py-2 text-sm text-gray-900 placeholder-gray-500 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
+                  required
+                />
+              </div>
+              <button 
+                type="submit" 
+                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-600 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,130 @@
+---
+export interface Props {
+  code: string;
+  language: string;
+  title?: string;
+  runnable?: boolean;
+}
+
+const { code, language, title, runnable = language === 'javascript' || language === 'js' } = Astro.props;
+---
+
+<div class="code-block relative rounded-lg overflow-hidden mb-6">
+  {title && (
+    <div class="code-title text-sm font-medium px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+      {title}
+    </div>
+  )}
+  
+  <pre class={`language-${language}`}>
+    <code class={`language-${language}`}>{code.trim()}</code>
+  </pre>
+  
+  <button class="copy-button" aria-label="Copy code to clipboard">
+    Copy
+  </button>
+  
+  {runnable && (
+    <button class="run-button" aria-label="Run this code">
+      Run it!
+    </button>
+  )}
+  
+  {runnable && (
+    <div class="code-output hidden mt-2 p-4 bg-gray-100 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
+      <div class="output-title text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Output:</div>
+      <div class="output-content"></div>
+    </div>
+  )}
+</div>
+
+<script>
+  // Handle copy functionality
+  const copyButtons = document.querySelectorAll('.copy-button');
+  
+  copyButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const pre = button.closest('.code-block')?.querySelector('pre');
+      const code = pre?.textContent || '';
+      
+      navigator.clipboard.writeText(code)
+        .then(() => {
+          button.textContent = 'Copied!';
+          setTimeout(() => {
+            button.textContent = 'Copy';
+          }, 2000);
+        })
+        .catch(err => {
+          console.error('Failed to copy text: ', err);
+          button.textContent = 'Failed!';
+          setTimeout(() => {
+            button.textContent = 'Copy';
+          }, 2000);
+        });
+    });
+  });
+  
+  // Handle run functionality for JavaScript
+  const runButtons = document.querySelectorAll('.run-button');
+  
+  runButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const pre = button.closest('.code-block')?.querySelector('pre');
+      const codeBlock = button.closest('.code-block');
+      const outputBlock = codeBlock?.querySelector('.code-output');
+      const outputContent = codeBlock?.querySelector('.output-content');
+      
+      if (!pre || !outputBlock || !outputContent) return;
+      
+      const code = pre.textContent || '';
+      
+      // Show the output block
+      outputBlock.classList.remove('hidden');
+      
+      // Create a safe execution environment
+      try {
+        // Capture console logs
+        const logs = [];
+        const originalConsoleLog = console.log;
+        console.log = (...args) => {
+          logs.push(args.map(arg => 
+            typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+          ).join(' '));
+          originalConsoleLog(...args);
+        };
+        
+        // Execute the code
+        const result = new Function(code)();
+        
+        // Restore console.log
+        console.log = originalConsoleLog;
+        
+        // Display the output
+        if (logs.length > 0) {
+          outputContent.innerHTML = logs.map(log => `<div class="mb-1">${log}</div>`).join('');
+        } else if (result !== undefined) {
+          outputContent.textContent = typeof result === 'object' 
+            ? JSON.stringify(result, null, 2) 
+            : String(result);
+        } else {
+          outputContent.textContent = 'Code executed successfully with no output.';
+        }
+      } catch (error) {
+        outputContent.innerHTML = `<div class="text-red-500">Error: ${error.message}</div>`;
+      }
+    });
+  });
+</script>
+
+<style>
+  .code-block {
+    margin-bottom: 1.5rem;
+  }
+  
+  .code-output {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9em;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+</style>

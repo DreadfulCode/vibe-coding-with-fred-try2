@@ -1,0 +1,30 @@
+---
+export interface Props {
+  images: {
+    url: string;
+    alt: string;
+    caption?: string;
+  }[];
+  columns?: number;
+}
+
+const { images, columns = 2 } = Astro.props;
+---
+
+<div class={`grid grid-cols-1 md:grid-cols-${columns} gap-4 my-6`}>
+  {images.map((image) => (
+    <figure class="overflow-hidden rounded-lg shadow-md">
+      <img 
+        src={image.url} 
+        alt={image.alt} 
+        class="w-full h-auto object-cover hover:scale-105 transition-transform duration-300" 
+        loading="lazy"
+      />
+      {image.caption && (
+        <figcaption class="p-3 text-sm text-center text-gray-600 dark:text-gray-400 italic">
+          {image.caption}
+        </figcaption>
+      )}
+    </figure>
+  ))}
+</div>

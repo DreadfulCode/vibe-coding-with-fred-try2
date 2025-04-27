@@ -1,0 +1,172 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const { 
+  title, 
+  description = "Developer tips, tutorials, and insights on modern web development", 
+  image = "/images/social-card.png" 
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalURL} />
+    
+    <title>{title} | Vibe Coding with Fred</title>
+    <meta name="description" content={description} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.url)} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.url)} />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  </head>
+  <body class="min-h-screen bg-gray-50 flex flex-col">
+    <Header />
+    <main class="flex-grow">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Add functionality for dark/light mode toggle
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        return 'light';
+      })();
+            
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+
+      window.localStorage.setItem('theme', theme);
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --color-text: #0f172a;
+    --color-bg: #f9fafb;
+    --color-primary: #3b82f6;
+  }
+
+  html, body {
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    font-family: 'Inter', system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  pre {
+    position: relative;
+    margin: 1rem 0;
+    border-radius: 0.5rem;
+    background-color: #f8f9fa;
+    overflow-x: auto;
+  }
+
+  code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9em;
+  }
+
+  .copy-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.4rem 0.5rem;
+    background-color: #e2e8f0;
+    border: none;
+    border-radius: 0.25rem;
+    color: #475569;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .copy-button:hover {
+    background-color: #cbd5e1;
+  }
+
+  .run-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 4.5rem;
+    padding: 0.4rem 0.5rem;
+    background-color: #93c5fd;
+    border: none;
+    border-radius: 0.25rem;
+    color: #1e3a8a;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .run-button:hover {
+    background-color: #60a5fa;
+  }
+
+  /* Dark mode overrides */
+  .dark {
+    --color-text: #f9fafb;
+    --color-bg: #111827;
+    --color-primary: #3b82f6;
+  }
+
+  .dark pre {
+    background-color: #1f2937;
+  }
+
+  .dark .copy-button {
+    background-color: #374151;
+    color: #d1d5db;
+  }
+
+  .dark .copy-button:hover {
+    background-color: #4b5563;
+  }
+
+  .dark .run-button {
+    background-color: #1d4ed8;
+    color: #bfdbfe;
+  }
+
+  .dark .run-button:hover {
+    background-color: #2563eb;
+  }
+</style>

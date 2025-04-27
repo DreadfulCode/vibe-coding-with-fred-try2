@@ -1,0 +1,179 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+// In a real implementation, we would fetch these from a CMS or content collection
+const allPosts = [
+  {
+    title: "Getting Started with Modern React Patterns",
+    slug: "getting-started-with-modern-react-patterns",
+    pubDate: new Date('2025-04-10'),
+    description: "Learn the latest React patterns and best practices for building scalable applications in 2025.",
+    image: "https://images.pexels.com/photos/11035471/pexels-photo-11035471.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["react", "javascript", "frontend"],
+    featured: true
+  },
+  {
+    title: "Building a Full-Stack App with Astro and Supabase",
+    slug: "building-fullstack-app-with-astro-supabase",
+    pubDate: new Date('2025-04-01'),
+    description: "A step-by-step guide to creating a full-stack application using Astro and Supabase.",
+    image: "https://images.pexels.com/photos/4974914/pexels-photo-4974914.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["astro", "supabase", "fullstack"],
+    featured: true
+  },
+  {
+    title: "Advanced TypeScript Techniques for Better Code",
+    slug: "advanced-typescript-techniques",
+    pubDate: new Date('2025-03-28'),
+    description: "Improve your TypeScript skills with these advanced techniques for writing safer, more maintainable code.",
+    image: "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["typescript", "javascript", "dev-tools"],
+    featured: false
+  },
+  {
+    title: "CSS Grid Mastery: Building Complex Layouts",
+    slug: "css-grid-mastery",
+    pubDate: new Date('2025-03-22'),
+    description: "Master CSS Grid to create complex, responsive layouts with less code and better maintainability.",
+    image: "https://images.pexels.com/photos/196645/pexels-photo-196645.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["css", "frontend", "web-design"],
+    featured: false
+  },
+  {
+    title: "Performance Optimization Techniques for Modern Web Apps",
+    slug: "performance-optimization-web-apps",
+    pubDate: new Date('2025-03-15'),
+    description: "Learn how to optimize your web applications for better performance and user experience.",
+    image: "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["performance", "web-dev", "optimization"],
+    featured: false
+  },
+  {
+    title: "Introduction to WebAssembly for JavaScript Developers",
+    slug: "webassembly-for-javascript-devs",
+    pubDate: new Date('2025-03-10'),
+    description: "Dive into WebAssembly and learn how to integrate it with your JavaScript projects for improved performance.",
+    image: "https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["webassembly", "javascript", "performance"],
+    featured: false
+  },
+  {
+    title: "Using the New JavaScript Array Methods in ES2025",
+    slug: "new-javascript-array-methods-es2025",
+    pubDate: new Date('2025-03-05'),
+    description: "Explore the powerful new array methods coming in ECMAScript 2025 and how to use them in your projects today.",
+    image: "https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["javascript", "es2025", "web-dev"],
+    featured: false
+  },
+  {
+    title: "Mastering State Management in Modern React Applications",
+    slug: "mastering-state-management-react",
+    pubDate: new Date('2025-02-28'),
+    description: "Compare different state management solutions in React and learn when to use each approach for optimal results.",
+    image: "https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["react", "state-management", "frontend"],
+    featured: false
+  },
+  {
+    title: "Building Accessible Web Applications: A Complete Guide",
+    slug: "building-accessible-web-applications",
+    pubDate: new Date('2025-02-20'),
+    description: "Learn how to make your web applications accessible to everyone with practical tips and code examples.",
+    image: "https://images.pexels.com/photos/7439141/pexels-photo-7439141.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    tags: ["accessibility", "web-dev", "frontend"],
+    featured: false
+  }
+];
+
+// All unique tags
+const allTags = [...new Set(allPosts.flatMap(post => post.tags))].sort();
+
+// Filter functionality would be implemented with client-side JS in a real application
+---
+
+<Layout title="Blog">
+  <div class="bg-gradient-to-b from-primary-50 to-white py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">The Blog</h1>
+        <p class="text-lg text-gray-600">
+          Tutorials, code examples, and insights for modern web developers.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Filters & Search -->
+    <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <!-- Tag Filter -->
+      <div class="flex flex-wrap gap-2 max-w-xl">
+        <button class="px-3 py-1 text-sm font-medium rounded-full bg-primary-100 text-primary-800 hover:bg-primary-200">
+          All
+        </button>
+        {allTags.slice(0, 8).map(tag => (
+          <button class="px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200">
+            #{tag}
+          </button>
+        ))}
+        <button class="px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200">
+          More...
+        </button>
+      </div>
+      
+      <!-- Search -->
+      <div class="relative w-full md:w-64">
+        <input 
+          type="text"
+          placeholder="Search posts..."
+          class="w-full px-4 py-2 pl-10 text-sm text-gray-900 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+        />
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+    </div>
+    
+    <!-- Blog Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {allPosts.map(post => (
+        <PostCard post={post} />
+      ))}
+    </div>
+    
+    <!-- Pagination -->
+    <div class="mt-12 flex justify-center">
+      <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+          <span class="sr-only">Previous</span>
+          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+        </a>
+        <a href="#" aria-current="page" class="relative inline-flex items-center px-4 py-2 border border-primary-500 bg-primary-50 text-sm font-medium text-primary-600 hover:bg-primary-100">
+          1
+        </a>
+        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+          2
+        </a>
+        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+          3
+        </a>
+        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+          ...
+        </span>
+        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+          8
+        </a>
+        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+          <span class="sr-only">Next</span>
+          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </div>
+</Layout>
