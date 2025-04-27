@@ -1,94 +1,18 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
 
-// In a real implementation, we would fetch these from a CMS or content collection
-const allPosts = [
-  {
-    title: "Getting Started with Modern React Patterns",
-    slug: "getting-started-with-modern-react-patterns",
-    pubDate: new Date('2025-04-10'),
-    description: "Learn the latest React patterns and best practices for building scalable applications in 2025.",
-    image: "https://images.pexels.com/photos/11035471/pexels-photo-11035471.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    tags: ["react", "javascript", "frontend"],
-    featured: true
-  },
-  {
-    title: "Building a Full-Stack App with Astro and Supabase",
-    slug: "building-fullstack-app-with-astro-supabase",
-    pubDate: new Date('2025-04-01'),
-    description: "A step-by-step guide to creating a full-stack application using Astro and Supabase.",
-    image: "https://images.pexels.com/photos/4974914/pexels-photo-4974914.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    tags: ["astro", "supabase", "fullstack"],
-    featured: true
-  },
-  {
-    title: "Advanced TypeScript Techniques for Better Code",
-    slug: "advanced-typescript-techniques",
-    pubDate: new Date('2025-03-28'),
-    description: "Improve your TypeScript skills with these advanced techniques for writing safer, more maintainable code.",
-    image: "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    tags: ["typescript", "javascript", "dev-tools"],
-    featured: false
-  },
-  {
-    title: "CSS Grid Mastery: Building Complex Layouts",
-    slug: "css-grid-mastery",
-    pubDate: new Date('2025-03-22'),
-    description: "Master CSS Grid to create complex, responsive layouts with less code and better maintainability.",
-    image: "https://images.pexels.com/photos/196645/pexels-photo-196645.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    tags: ["css", "frontend", "web-design"],
-    featured: false
-  },
-  {
-    title: "Performance Optimization Techniques for Modern Web Apps",
-    slug: "performance-optimization-web-apps",
-    pubDate: new Date('2025-03-15'),
-    description: "Learn how to optimize your web applications for better performance and user experience.",
-    image: "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    tags: ["performance", "web-dev", "optimization"],
-    featured: false
-  },
-  {
-    title: "Introduction to WebAssembly for JavaScript Developers",
-    slug: "webassembly-for-javascript-devs",
-    pubDate: new Date('2025-03-10'),
-    description: "Dive into WebAssembly and learn how to integrate it with your JavaScript projects for improved performance.",
-    image: "https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    tags: ["webassembly", "javascript", "performance"],
-    featured: false
-  },
-  {
-    title: "Using the New JavaScript Array Methods in ES2025",
-    slug: "new-javascript-array-methods-es2025",
-    pubDate: new Date('2025-03-05'),
-    description: "Explore the powerful new array methods coming in ECMAScript 2025 and how to use them in your projects today.",
-    image: "https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    tags: ["javascript", "es2025", "web-dev"],
-    featured: false
-  },
-  {
-    title: "Mastering State Management in Modern React Applications",
-    slug: "mastering-state-management-react",
-    pubDate: new Date('2025-02-28'),
-    description: "Compare different state management solutions in React and learn when to use each approach for optimal results.",
-    image: "https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    tags: ["react", "state-management", "frontend"],
-    featured: false
-  },
-  {
-    title: "Building Accessible Web Applications: A Complete Guide",
-    slug: "building-accessible-web-applications",
-    pubDate: new Date('2025-02-20'),
-    description: "Learn how to make your web applications accessible to everyone with practical tips and code examples.",
-    image: "https://images.pexels.com/photos/7439141/pexels-photo-7439141.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    tags: ["accessibility", "web-dev", "frontend"],
-    featured: false
-  }
-];
+// Get all blog posts from the content collection
+const allPosts = await getCollection('blog');
+
+// Sort posts by date (newest first)
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
 
 // All unique tags
-const allTags = [...new Set(allPosts.flatMap(post => post.tags))].sort();
+const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags))].sort();
 
 // Filter functionality would be implemented with client-side JS in a real application
 ---
@@ -138,8 +62,16 @@ const allTags = [...new Set(allPosts.flatMap(post => post.tags))].sort();
     
     <!-- Blog Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {allPosts.map(post => (
-        <PostCard post={post} />
+      {sortedPosts.map(post => (
+        <PostCard post={{
+          title: post.data.title,
+          description: post.data.description,
+          pubDate: post.data.pubDate,
+          image: post.data.image,
+          tags: post.data.tags,
+          slug: post.slug,
+          featured: post.data.featured
+        }} />
       ))}
     </div>
     
